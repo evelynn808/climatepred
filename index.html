@@ -6,14 +6,136 @@
 
     <title>Global Climate Trends — 2020–2024</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+
+<div class="hero">
+  <div class="hero-eyebrow">Spatiotemporal Climate Analysis · 2020–2024</div>
+  <h1>Global Temperature<br><span>Shift Detection</span></h1>
+  <p>Tracking warming and cooling trends across 20 countries using daily climate records. Click any country to explore its temperature trajectory, CO₂ emissions, and renewable energy adoption.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="val warm" id="stat-warming">—</div>
+      <div class="lbl">Countries Warming</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val cool" id="stat-cooling">—</div>
+      <div class="lbl">Countries Cooling</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val" id="stat-records">36,540</div>
+      <div class="lbl">Daily Records</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val" id="stat-years">5 yrs</div>
+      <div class="lbl">2020–2024</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- COUNTRY HEAT MAP -->
+  <div class="section-header">
+    <h2>Temperature Overview by Country</h2>
+    <span class="tag">Select to explore</span>
+  </div>
+
+  <div class="controls">
+    <span class="ctrl-label">Sort by:</span>
+    <button class="chip active" onclick="sortCards('delta')">Trend Δ</button>
+    <button class="chip" onclick="sortCards('temp')">Avg Temp</button>
+    <button class="chip" onclick="sortCards('name')">Name</button>
+  </div>
+
+  <div class="country-grid" id="countryGrid"></div>
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div>
+        <div class="detail-title" id="detailCountry"></div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px;" id="detailSummary"></div>
+      </div>
+      <div class="detail-meta" id="detailMeta"></div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-box">
+        <h4>Annual Avg Temperature (°C)</h4>
+        <canvas id="tempChart" height="160"></canvas>
+      </div>
+      <div class="chart-box">
+        <h4>CO₂ Emissions + Renewable Share</h4>
+        <canvas id="co2Chart" height="160"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="section-header">
+    <h2>All Countries: 2020 → 2024 Comparison</h2>
+    <span class="tag">Full dataset</span>
+  </div>
+  <table class="trend-table" id="trendTable">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Avg Temp 2020</th>
+        <th>Avg Temp 2024</th>
+        <th>Δ Change</th>
+        <th>Trend</th>
+        <th>CO₂ 2024</th>
+        <th>Renewable 2024</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <!-- ML PREDICTION PANEL -->
+  <div class="section-header">
+    <h2>Predictive Trend Modelling</h2>
+    <span class="tag">Linear regression extrapolation</span>
+  </div>
+  <div class="ml-section">
+    <div class="ml-header">
+      <span class="ml-badge">ML Model</span>
+      <h3 style="font-size:16px;font-weight:600;">2025–2027 Temperature Forecast</h3>
+    </div>
+    <p>Using ordinary least squares regression fitted to 5 years of annual country averages. Dashed lines show extrapolated predictions for 2025–2027. This is the simplest version of what a full LSTM or Gaussian Process model would do — a natural next step in the project.</p>
+
+    <div class="controls">
+      <span class="ctrl-label">Country:</span>
+      <select id="mlCountrySelect" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 12px;font-family:'Space Grotesk',sans-serif;font-size:13px;cursor:pointer;" onchange="renderMLChart()"></select>
+    </div>
+
+    <div class="ml-chart-wrap">
+      <canvas id="mlChart" height="120"></canvas>
+    </div>
+    <div class="prediction-legend">
+      <div class="pred-item"><div class="pred-dot" style="background:var(--accent)"></div> Observed (2020–2024)</div>
+      <div class="pred-item"><div class="pred-dot" style="background:var(--accent);opacity:0.5;border-top:2px dashed var(--accent)"></div> OLS Forecast (2025–2027)</div>
+      <div class="pred-item"><div class="pred-dot" style="background:rgba(59,130,246,0.2)"></div> 95% Confidence Interval</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <p style="margin-bottom:4px;color:var(--text);font-weight:500;">Global Climate & Energy Dataset · Kaggle</p>
+    <p>20 countries · Daily records · 2020–2024 · 36,540 observations</p>
+  </div>
+  <div class="footer-tags">
+    <span class="tech-tag">Python</span>
+    <span class="tech-tag">Pandas</span>
+    <span class="tech-tag">Chart.js</span>
+    <span class="tech-tag">OLS Regression</span>
+    <span class="tech-tag">Spatiotemporal Analysis</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
